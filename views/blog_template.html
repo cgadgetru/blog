@@ -1,39 +1,60 @@
 <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-<title>My Blog</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My blog</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/angular.min.js"></script>
 </head>
 <body>
+<div class="container">
+    {% if username %}
+    Welcome {{username}} <a href="/logout">Logout</a> | <a href="/newpost">New Post</a>
 
-{% if username %}
-Welcome {{username}}        <a href="/logout">Logout</a> | <a href="/newpost">New Post</a><p>
-{% else %}
-You are not logged in!        <a href="/login">Login</a> | <a href="/signup">Sign Up</a><p>
-{% endif %}
+    <p>
+        {% else %}
+        You are not logged in! <a href="/login">Login</a> | <a href="/signup">Sign Up</a>
 
-<h1>My Blog</h1>
+    <p>
+        {% endif %}
 
-{% for post in myposts %}
-<h2><a href="/post/{{post['permalink']}}">{{post['title']}}</a></h2>
-Posted {{post['date']}} <i>By {{post['author']}}</i><br>
-Comments:
-<a href="/post/{{post['permalink']}}">{{post['comments']|length}}</a>
-<hr>
-{% autoescape false %}
-{{post['body']}}
-{% endautoescape %}
-<p>
-<p>
-<em>Filed Under</em>:
-{% for tag in post.tags %}
-    {% if loop.first %}
+    <h1>My Blog</h1>
+
+    {% for post in myposts %}
+    <h2><a href="/post/{{post['permalink']}}">{{post['title']}}</a></h2>
+    Posted {{post['date']}} <i>By {{post['author']}}</i><br>
+    Comments:
+    <a href="/post/{{post['permalink']}}">{{post['comments']|length}}</a>
+    <hr>
+    {% autoescape false %}
+    {{post['body']}}
+    {% endautoescape %}
+    <p>
+
+    <p>
+        <em>Filed Under</em>:
+        {% for tag in post.tags %}
+        {% if loop.first %}
         <a href="/tag/{{tag}}">{{tag}}</a>
-    {% else %}
+        {% else %}
         , <a href="/tag/{{tag}}">{{tag}}</a>
-    {% endif %}
-{% endfor %}
-{% endfor %}
-<p>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+
+    <p>
+</div>
+
 </body>
 </html>
 
