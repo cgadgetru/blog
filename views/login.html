@@ -1,17 +1,23 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My blog</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<html>
-  <head>
-    <title>Login</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-  </head>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/angular.min.js"></script>
+</head>
 
   <body>
-    <h2>Login</h2>
+    <div class="container"><h2>Login</h2>
     <form method="post">
       <table>
         <tr>
@@ -34,14 +40,14 @@
           </td>
           <td class="error">
 	    {{login_error}}
-            
+
           </td>
         </tr>
 
       </table>
 
       <input type="submit">
-    </form>
+    </form></div>
   </body>
 
 </html>

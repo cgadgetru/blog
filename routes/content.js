@@ -17,12 +17,26 @@ function ContentHandler (db) {
 
             return res.render('blog_template', {
                 title: 'blog homepage',
-                username: req.username,
-                myposts: results
+                username: req.username
             });
-        });
-    }
 
+
+        });
+    };
+
+    this.getPostsList = function(req, res, next) {
+        "use strict";
+
+        posts.getPosts(10, function(err, results) {
+            "use strict";
+
+            if (err) return next(err);
+
+            return res.json(results);
+
+
+        });
+    };
     this.displayMainPageByTag = function(req, res, next) {
         "use strict";
 
@@ -54,31 +68,29 @@ function ContentHandler (db) {
             if (!post) return res.redirect("/post_not_found");
 
             // init comment form fields for additional comment
-            var comment = {'name': req.username, 'body': "", 'email': ""}
+            var comment = {'name': req.username, 'body': "", 'email': ""};
 
-            return res.render('entry_template', {
-                title: 'blog post',
-                username: req.username,
-                post: post,
-                comment: comment,
-                errors: ""
-            });
+            return res.json(post);
         });
     }
 
     this.handleNewComment = function(req, res, next) {
         "use strict";
-        var name = req.body.commentName;
-        var email = req.body.commentEmail;
-        var body = req.body.commentBody;
-        var permalink = req.body.permalink;
 
+        var name = req.body.comment.name;
+        var email = req.body.comment.email;
+        var body = req.body.comment.body;
+        var permalink = req.body.permalink;
+        console.log("name",name);
+        console.log("email",email);
+        console.log("body",body);
+        console.log("permalink",permalink);
         // Override the comment with our actual user name if found
         if (req.username) {
             name = req.username;
         }
 
-        if (!name || !body) {
+        /*if (!name || !body) {
             // user did not fill in enough information
 
             posts.getPostByPermalink(permalink, function(err, post) {
@@ -89,9 +101,9 @@ function ContentHandler (db) {
                 if (!post) return res.redirect("/post_not_found");
 
                 // init comment form fields for additional comment
-                var comment = {'name': name, 'body': "", 'email': ""}
+                var comment = {'name': name, 'body': "", 'email': ""};
 
-                var errors = "Post must contain your name and an actual comment."
+                var errors = "Post must contain your name and an actual comment.";
                 return res.render('entry_template', {
                     title: 'blog post',
                     username: req.username,
@@ -102,7 +114,7 @@ function ContentHandler (db) {
             });
 
             return;
-        }
+        }*/
 
         // even if there is no logged in user, we can still post a comment
         posts.addComment(permalink, name, email, body, function(err, updated) {
@@ -114,7 +126,7 @@ function ContentHandler (db) {
 
             return res.redirect("/post/" + permalink);
         });
-    }
+    };
 
     this.displayPostNotFound = function(req, res, next) {
         "use strict";

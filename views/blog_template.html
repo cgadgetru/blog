@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!DOCTYPE html >
+<!--[if lt IE 7]>      <html ng-app = "main" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html ng-app = "main" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html ng-app = "main" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app = "main" class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,6 +14,7 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/angular.min.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -28,33 +28,81 @@
     <p>
         {% endif %}
 
-    <h1>My Blog</h1>
+    <div ng-switch="view_type" ng-controller="postsListCtrl"  ng-init="get_list()" class="views">
+        <div ng-switch-when="posts-list" class="post-list">
+            <h1>My Blog</h1>
 
-    {% for post in myposts %}
-    <h2><a href="/post/{{post['permalink']}}">{{post['title']}}</a></h2>
-    Posted {{post['date']}} <i>By {{post['author']}}</i><br>
-    Comments:
-    <a href="/post/{{post['permalink']}}">{{post['comments']|length}}</a>
-    <hr>
-    {% autoescape false %}
-    {{post['body']}}
-    {% endautoescape %}
-    <p>
+            <div  class="post">
+                <div ng-repeat="post in posts">
+                    <h2><a href="" ng-click="get_post(post.permalink)"><span ng-bind="post.title"></span></a></h2>
 
-    <p>
-        <em>Filed Under</em>:
-        {% for tag in post.tags %}
-        {% if loop.first %}
-        <a href="/tag/{{tag}}">{{tag}}</a>
-        {% else %}
-        , <a href="/tag/{{tag}}">{{tag}}</a>
-        {% endif %}
-        {% endfor %}
-        {% endfor %}
+                    <h3>Author: <span ng-bind="post.author"></span></h3>
 
-    <p>
+                    <h3>Date: <span ng-bind="post.date | date:'shortDate'"></span></h3>
+
+                    <p ng-bind="post.body"></p>
+
+                    <h3>Comments: <a href="" ng-click="comments_show = !comments_show">{$ post.comments.length $}</a>
+                    </h3>
+
+                    <ul ng-show="comments_show">
+                        <li ng-repeat="comment in post.comments">
+
+                            <h4 ng-bind="comment.author"></h4>
+                            <h6>Email: <span ng-bind="comment.email"></span></h6>
+
+                            <p>Likes: <span ng-bind="comment.num_likes"></span></p>
+
+                            <p ng-bind="comment.body"></p>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div ng-switch-when="single-post" class="single-post">
+           <h2>Одиночный пост</h2>
+            <h2><span ng-bind="single_post.title"></span></a></h2>
+
+            <h3>Author: <span ng-bind="single_post.author"></span></h3>
+
+            <h3>Date: <span ng-bind="single_post.date | date:'shortDate'"></span></h3>
+
+            <p ng-bind="single_post.body"></p>
+
+            <h3>Comments: <a href="" ng-click="comments_show = !comments_show">{$ single_post.comments.length $}</a>
+            </h3>
+
+            <ul ng-show="comments_show">
+                <li ng-repeat="comment in single_post.comments">
+
+                    <h4 ng-bind="comment.author"></h4>
+                    <h6>Email: <span ng-bind="comment.email"></span></h6>
+
+                    <p>Likes: <span ng-bind="comment.num_likes"></span></p>
+
+                    <p ng-bind="comment.body"></p>
+
+                </li>
+            </ul>
+
+            <h3>Add a comment</h3>
+
+            <form  ng-submit="add_comment(single_post.permalink,comment)"> <!--/newcomment-->
+                <input type="hidden" name="permalink" ng-model="single_post.permalink">
+                <h4>{$ errors $}</h4>
+                <b>Name</b> (required)<br>
+                <input type="text" name="commentName" size="60" ng-model = "comment.name"><br>
+                <b>Email</b> (optional)<br>
+                <input type="text" name="commentEmail" size="60" ng-model = "comment.email"><br>
+                <b>Comment</b><br>
+                <textarea name="commentBody" cols="60" rows="10" ng-model = "comment.body"></textarea><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
 </div>
-
+<script src="/js/main.js"></script>
 </body>
 </html>
 
