@@ -14,68 +14,44 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/angular.min.js"></script>
+    <style>
+        .signup-form{
+            width: 400px;
+            margin: auto;
+        }
+    </style>
 </head>
 
   <body>
    <div class="container"> Already a user? <a href="/login">Login</a><p>
-    <h2>Signup</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="{{username}}">
-          </td>
-          <td class="error">
-	    {{username_error}}
 
-          </td>
-        </tr>
+       <div class="signup-form"><h2>Signup</h2>
 
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-	    {{password_error}}
-
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            Verify Password
-          </td>
-          <td>
-            <input type="password" name="verify" value="">
-          </td>
-          <td class="error">
-	    {{verify_error}}
-
-          </td>
-        </tr>
-
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="{{email}}">
-          </td>
-          <td class="error">
-	    {{email_error}}
-
-          </td>
-        </tr>
-      </table>
-
-      <input type="submit">
-    </form></div>
+           <form method="post">
+               <div class="form-group">
+                   <label for="username">Username</label>
+                   <input type="text" class="form-control" name="username" id="username" value="{{username}}">
+                   <span>{{username_error}}</span>
+               </div>
+               <div class="form-group">
+                   <label for="password">Password</label>
+                   <input type="password" class="form-control" id="password" name="password" value="">
+                   <span>{{password_error}}</span>
+               </div>
+               <div class="form-group">
+                   <label for="verify">Verify Password</label>
+                   <input type="password" class="form-control" id="verify" name="verify" value="">
+                   <span>{{verify_error}}</span>
+               </div>
+               <div class="form-group">
+                   <label for="password">Email (optional)</label>
+                   <input type="text" class="form-control" name="email" value="{{email}}">
+                   <span>{{email_error}}</span>
+               </div>
+               <input class="btn btn-default" type="submit">
+           </form>
+       </div>
+   </div>
   </body>
 
 </html>

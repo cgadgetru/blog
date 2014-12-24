@@ -81,10 +81,7 @@ function ContentHandler (db) {
         var email = req.body.comment.email;
         var body = req.body.comment.body;
         var permalink = req.body.permalink;
-        console.log("name",name);
-        console.log("email",email);
-        console.log("body",body);
-        console.log("permalink",permalink);
+
         // Override the comment with our actual user name if found
         if (req.username) {
             name = req.username;
@@ -166,9 +163,9 @@ function ContentHandler (db) {
     this.handleNewPost = function(req, res, next) {
         "use strict";
 
-        var title = req.body.subject
-        var post = req.body.body
-        var tags = req.body.tags
+        var title = req.body.title;
+        var post = req.body.body;
+        var tags = req.body.tags;
 
         if (!req.username) return res.redirect("/signup");
 
@@ -191,9 +188,10 @@ function ContentHandler (db) {
             if (err) return next(err);
 
             // now redirect to the blog permalink
+            console.log("blog permalink",permalink);
             return res.redirect("/post/" + permalink)
         });
-    }
+    };
 
     this.handleLike = function(req, res, next) {
         "use strict";

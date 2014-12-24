@@ -55,7 +55,7 @@ function SessionHandler (db) {
                 if (err) return next(err);
 
                 res.cookie('session', session_id);
-                return res.redirect('/welcome');
+                return res.redirect('/');
             });
         });
     }
@@ -131,7 +131,7 @@ function SessionHandler (db) {
                     // this was a duplicate
                     if (err.code == '11000') {
                         errors['username_error'] = "Username already in use. Please choose another";
-                        return res.render("signup", errors);
+                        return res.json(errors);
                     }
                     // this was a different error
                     else {
@@ -143,9 +143,9 @@ function SessionHandler (db) {
                     "use strict";
 
                     if (err) return next(err);
-
+                    console.log("session",session_id);
                     res.cookie('session', session_id);
-                    return res.redirect('/welcome');
+                    return res.json(errors);
                 });
             });
         }
@@ -163,7 +163,7 @@ function SessionHandler (db) {
             return res.redirect("/signup");
         }
 
-        return res.render("welcome", {'username':req.username})
+        return res.redirect("/");
     }
 }
 

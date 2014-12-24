@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html ng-app = "main" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html ng-app = "main" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html ng-app = "main" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app = "main" class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,6 +14,12 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/angular.min.js"></script>
+    <style>
+        .new_post{
+            width: 400px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -24,18 +30,27 @@ You are not logged in!        <a href="/login">Login</a> | <a href="/signup">Sig
 {% endif %}
 <a href="/">Blog Home</a><br><br>
 
-<form action="/newpost" method="POST">
-{{errors}}
-<h2>Title</h2>
-<input type="text" name="subject" size="120" value="{{subject}}"><br>
-<h2>Blog Entry<h2>
-<textarea name="body" cols="120" rows="20">{{body}}</textarea><br>
-<h2>Tags</h2>
-Comma separated, please<br>
-<input type="text" name="tags" size="120" value="{{tags}}"><br>
-<p>
-<input type="submit" value="Submit"></div>
-
+    <div class="new_post">
+        <form ng-controller="newPostCtrl" ng-submit="add_new_post(post)">
+            {{errors}}
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" name="subject" size="120" ng-model="post.title" value="{{subject}}"><br>
+            </div>
+            <div class="form-group">
+                <label>Blog Entry</label>
+                <textarea name="body" class="form-control" cols="120" ng-model = "post.body" rows="20">{{body}}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Tags</label>
+                <span>Comma separated, please</span>
+                <input type="text" class="form-control" name="tags" ng-model="post.tags" size="120" value="{{tags}}">
+            </div>
+            <input type="submit" class="btn btn-default" value="Submit">
+        </form>
+    </div>
+</div>
+<script src="/js/main.js"></script>
 </body>
 </html>
 

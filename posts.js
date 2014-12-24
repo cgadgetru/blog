@@ -34,7 +34,7 @@ function PostsDAO(db) {
 
             if (err) return callback(err, null);
 
-            console.log("Inserted new post");
+            console.log("Inserted new post",permalink);
             callback(err, permalink);
         });
     }

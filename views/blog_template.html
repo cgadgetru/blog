@@ -14,22 +14,96 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/angular.min.js"></script>
-
+    <style>
+        .comment_form{
+            width: 500px;
+        }
+        .ng-valid{
+            border-color: #3c763d;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        }
+        .ng-invalid {
+            border-color: #a94442;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        }
+        .login-form,.signup-form{
+            width: 400px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
+<div class="container" ng-controller="mainCtrl">
     {% if username %}
-    Welcome {{username}} <a href="/logout">Logout</a> | <a href="/newpost">New Post</a>
+    Welcome {{username}} <a href="/logout">Logout</a> | <a ng-click="view_type = 'new-post'" href="">New Post</a> |
+    <a href="" ng-click="view_type = 'posts-list'">Home page</a>
 
     <p>
         {% else %}
-        You are not logged in! <a href="/login">Login</a> | <a href="/signup">Sign Up</a>
-
+        You are not logged in! <a href="" ng-click="view_type = 'login'">Login</a> | <a href="" ng-click="view_type = 'singup'">Sign Up</a> |
+        <a href="" ng-click="view_type = 'posts-list'">Home page</a>
     <p>
         {% endif %}
 
-    <div ng-switch="view_type" ng-controller="postsListCtrl"  ng-init="get_list()" class="views">
-        <div ng-switch-when="posts-list" class="post-list">
+    <div ng-switch="view_type"   ng-init="get_list()" class="views">
+    <div ng-switch-when="login">
+        <div class="login-form">
+            <h2>Login</h2>
+
+            <form name="loginForm"  method="post" novalidate ng-submit="loginForm.$valid && login(user)">
+                <div class="form-group">
+                    <label for="login_username">Username</label>
+                    <input type="text" class="form-control" ng-model="user.username" name="username" id="login_username" value="{{username}}">
+                </div>
+                <div class="form-group">
+                    <label for="login_password">Password</label>
+                    <input type="password" class="form-control" ng-model="user.password" name="password" id="login_password" value="">
+                </div>
+
+                <input class="btn btn-default" type="submit">
+            </form>
+        </div>
+    </div>
+    <div ng-switch-when="singup">
+        <div class="signup-form">
+            <h2>Signup</h2>
+            <div ng-bind="singup_error"></div>
+            <form name = "singupForm" method="post" novalidate ng-submit="singupForm.$valid && signup(user)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" id="username" ng-model="user.username" value="{{username}}" required>
+                    <div ng-show="singupForm.username.$dirty && singupForm.username.$invalid">Invalid:
+                        <span ng-show="singupForm.username.$error.required">Tell us your name.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" ng-model="user.password" value="" required>
+                    <div ng-show="singupForm.password.$dirty && singupForm.password.$invalid">Invalid:
+                        <span ng-show="singupForm.password.$error.required">Tell us your password.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="verify">Verify Password</label>
+                    <input type="password" class="form-control" id="verify" name="verify" ng-model="user.verify" value="" required>
+                    <div ng-show="singupForm.verify.$dirty && singupForm.verify.$invalid">Invalid:
+                        <span ng-show="singupForm.verify.$error.required">Tell us your verify.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Email (optional)</label>
+                    <input type="text" class="form-control" name="email" value="{{email}}" ng-model="user.email" required>
+                    <div ng-show="singupForm.email.$dirty && singupForm.email.$invalid">Invalid:
+                        <span ng-show="singupForm.email.$error.required">Tell us your email.</span>
+                    </div>
+                </div>
+                <input class="btn btn-default" type="submit">
+            </form>
+        </div>
+    </div>
+    <div ng-switch-when="posts-list" class="post-list">
             <h1>My Blog</h1>
 
             <div  class="post">
@@ -62,7 +136,7 @@
         </div>
         <div ng-switch-when="single-post" class="single-post">
            <h2>Одиночный пост</h2>
-            <h2><span ng-bind="single_post.title"></span></a></h2>
+            <h2><span ng-bind="single_post.title"></span></h2>
 
             <h3>Author: <span ng-bind="single_post.author"></span></h3>
 
@@ -88,18 +162,47 @@
 
             <h3>Add a comment</h3>
 
-            <form  ng-submit="add_comment(single_post.permalink,comment)"> <!--/newcomment-->
-                <input type="hidden" name="permalink" ng-model="single_post.permalink">
-                <h4>{$ errors $}</h4>
-                <b>Name</b> (required)<br>
-                <input type="text" name="commentName" size="60" ng-model = "comment.name"><br>
-                <b>Email</b> (optional)<br>
-                <input type="text" name="commentEmail" size="60" ng-model = "comment.email"><br>
-                <b>Comment</b><br>
-                <textarea name="commentBody" cols="60" rows="10" ng-model = "comment.body"></textarea><br>
-                <input type="submit" value="Submit">
+            <form class="comment_form" name="commentForm" ng-submit="commentForm.$valid && add_comment(single_post.permalink,comment)" novalidate> <!--/newcomment-->
+                <div>comment form is {$ commentForm.$valid $}</div>
+                <div class="from-group">
+                    <input type="hidden" name="permalink" ng-model="single_post.permalink">
+                    <label for = "name">Name  (required)</label>
+                    <input type="text" class="form-control" name="commentName" id = "name" size="60" ng-model = "comment.name" required>
+                </div>
+                <div class="from-group">
+                    <label for = "email">Email  (optional)</label>
+                    <input type="text" class="form-control" id = "email" name="commentEmail" size="60" ng-model = "comment.email">
+                </div>
+                <div class="from-group">
+                    <label>Comment</label>
+                    <textarea name="commentBody" class="form-control" cols="60" rows="10" ng-model = "comment.body" required></textarea>
+                </div>
+                <div class="from-group">
+                    <input type="submit" class="btn btn-default" value="Submit">
+                </div>
             </form>
         </div>
+    <div ng-switch-when="new-post">
+        <div class="new_post">
+            <form name = "newPostForm" ng-submit="newPostForm.$valid && add_new_post(post)" novalidate>
+                {{errors}}
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-control" name="subject" size="120" ng-model="post.title" value="{{subject}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Blog Entry</label>
+                    <textarea name="body" class="form-control" cols="120" ng-model = "post.body" rows="20" required>{{body}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tags</label>
+                    <span>Comma separated, please</span>
+                    <input type="text" class="form-control" name="tags" ng-model="post.tags" size="120" value="{{tags}}" required>
+                </div>
+                <input type="submit" class="btn btn-default" value="Submit">
+            </form>
+        </div>
+    </div>
     </div>
 </div>
 <script src="/js/main.js"></script>
