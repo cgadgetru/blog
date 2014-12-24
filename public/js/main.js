@@ -72,9 +72,15 @@ app.factory("User",[
 
 app.controller("mainCtrl",['$scope','Posts','User',function($scope,Posts,User){
     $scope.singup_error = '';
+    $scope.login_error = '';
     $scope.login = function(user){
-        User.login(user,function () {
-            window.location.href = "/";
+        User.login(user,function (error) {
+            if(error.login_error){
+                $scope.login_error = error.login_error;
+            }else{
+                window.location.href = "/";
+            }
+
         }, function (data) {
             $scope.error_message = data.error || 'uncaught exception';
         })

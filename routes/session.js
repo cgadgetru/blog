@@ -38,10 +38,10 @@ function SessionHandler (db) {
 
             if (err) {
                 if (err.no_such_user) {
-                    return res.render("login", {username:username, password:"", login_error:"No such user"});
+                    return res.json({login_error:"No such user"});
                 }
                 else if (err.invalid_password) {
-                    return res.render("login", {username:username, password:"", login_error:"Invalid password"});
+                    return res.json({login_error:"Invalid password"});
                 }
                 else {
                     // Some other kind of error
@@ -55,7 +55,7 @@ function SessionHandler (db) {
                 if (err) return next(err);
 
                 res.cookie('session', session_id);
-                return res.redirect('/');
+                return res.json('{}');
             });
         });
     }
