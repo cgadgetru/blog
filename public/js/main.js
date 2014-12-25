@@ -18,6 +18,13 @@ app.factory("Posts",[
                     error(data);
                 });
             },
+            getPostByTag:function (tag, callback, error) {
+                $http.get('/tag/' + tag).success(function (data) {
+                    callback(data);
+                }).error(function (data) {
+                    error(data);
+                });
+            },
             getPost: function (permalink, callback, error) {
                 $http.get('/post/' + permalink).success(function (data) {
                     callback(data);
@@ -81,8 +88,8 @@ app.controller("mainCtrl",['$scope','Posts','User',function($scope,Posts,User){
                 window.location.href = "/";
             }
 
-        }, function (data) {
-            $scope.error_message = data.error || 'uncaught exception';
+        }, function (err) {
+            console.error("error",err);
         })
     };
     $scope.signup = function(user){
@@ -102,8 +109,8 @@ app.controller("mainCtrl",['$scope','Posts','User',function($scope,Posts,User){
                 }else{
                     window.location.href = "/";
                 }
-            }, function (data) {
-                $scope.error_message = data.error || 'uncaught exception';
+            }, function (err) {
+                console.error("error",err);
             })
         }
 
@@ -114,32 +121,46 @@ app.controller("mainCtrl",['$scope','Posts','User',function($scope,Posts,User){
         $scope.comments_show = false;
         Posts.getList(function (posts) {
             $scope.posts = posts;
-        }, function (data) {
-            $scope.error_message = data.error || 'uncaught exception';
+        }, function (err) {
+            console.error("error",err);
         });
+    };
+    $scope.get_posts_by_tag = function(tag){
+        Posts.getPostByTag(tag,function(posts){
+            $scope.view_type = "posts-list-by-tag";
+            $scope.comments_show = false;
+            $scope.posts_by_tag = posts;
+        },function(err){
+            console.error("error",err);
+        })
     };
     $scope.get_post = function(permalink){
         Posts.getPost(permalink,function(post){
             $scope.view_type = "single-post";
             $scope.single_post = post;
         },function(err){
-            $scope.error_message = data.error || 'uncaught exception';
+            console.error("error",err);
         })
     };
+
     $scope.add_comment = function(permalink,comment){
+        var self = this;
         Posts.addComment(permalink,comment,function(post){
             $scope.view_type = "single-post";
+            $scope.comments_show = true;
+            self.comment = {};
             $scope.single_post = post;
         },function(err){
-            $scope.error_message = data.error || 'uncaught exception';
+            console.error("error",err);
         });
     };
     $scope.add_new_post = function(post){
         Posts.addNewPost(post,function(post){
             $scope.view_type = "single-post";
+            console.log("post",post);
             $scope.single_post = post;
         },function(err){
-            $scope.error_message = data.error || 'uncaught exception';
+            console.error("error",err);
         });
     };
 }]);

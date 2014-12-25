@@ -6,7 +6,7 @@ var express = require('express')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser');
 
-MongoClient.connect('mongodb://localhost:27017/blog', function(err, db) {
+MongoClient.connect('mongodb://localhost:27017/blog1', function(err, db) {
     "use strict";
     if(err) throw err;
 

@@ -47,11 +47,7 @@ function ContentHandler (db) {
 
             if (err) return next(err);
 
-            return res.render('blog_template', {
-                title: 'blog homepage',
-                username: req.username,
-                myposts: results
-            });
+            return res.json(results);
         });
     }
 
@@ -173,8 +169,8 @@ function ContentHandler (db) {
             var errors = "Post must contain a title and blog entry";
             return res.render("newpost_template", {subject:title, username:req.username, body:post, tags:tags, errors:errors});
         }
-
-        var tags_array = extract_tags(tags)
+        console.log("tags",tags);
+        var tags_array = extract_tags(tags);
 
         // looks like a good entry, insert it escaped
         var escaped_post = sanitize(post).escape();
@@ -182,14 +178,14 @@ function ContentHandler (db) {
         // substitute some <br> for the paragraph breaks
         var formatted_post = escaped_post.replace(/\r?\n/g,'<br>');
 
-        posts.insertEntry(title, formatted_post, tags_array, req.username, function(err, permalink) {
+        posts.insertEntry(title, formatted_post, tags_array, req.username, function(err, post) {
             "use strict";
 
             if (err) return next(err);
 
             // now redirect to the blog permalink
-            console.log("blog permalink",permalink);
-            return res.redirect("/post/" + permalink)
+            console.dir(post);
+            return res.json(post);
         });
     };
 

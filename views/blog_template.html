@@ -38,12 +38,12 @@
 <div class="container" ng-controller="mainCtrl">
     {% if username %}
     Welcome {{username}} <a href="/logout">Logout</a> | <a ng-click="view_type = 'new-post'" href="">New Post</a> |
-    <a href="" ng-click="view_type = 'posts-list'">Home page</a>
+    <a href="" ng-click="get_list()">Home page</a>
 
     <p>
         {% else %}
         You are not logged in! <a href="" ng-click="view_type = 'login'">Login</a> | <a href="" ng-click="view_type = 'singup'">Sign Up</a> |
-        <a href="" ng-click="view_type = 'posts-list'">Home page</a>
+        <a href="" ng-click="get_list()">Home page</a>
     <p>
         {% endif %}
 
@@ -51,7 +51,7 @@
     <div ng-switch-when="login">
         <div class="login-form">
             <h2>Login</h2>
-            <div ng-bind="login_error"></div>
+            <p class="bg-danger" ng-bind="login_error"></p>
             <form name="loginForm"  method="post" novalidate ng-submit="loginForm.$valid && login(user)">
                 <div class="form-group">
                     <label for="login_username">Username</label>
@@ -75,7 +75,7 @@
     <div ng-switch-when="singup">
         <div class="signup-form">
             <h2>Signup</h2>
-            <div ng-bind="singup_error"></div>
+            <p class="bg-danger" ng-bind="singup_error"></p>
             <form name = "singupForm" method="post" novalidate ng-submit="singupForm.$valid && signup(user)">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -116,23 +116,57 @@
                 <div ng-repeat="post in posts">
                     <h2><a href="" ng-click="get_post(post.permalink)"><span ng-bind="post.title"></span></a></h2>
 
-                    <h3>Author: <span ng-bind="post.author"></span></h3>
+                    <p>Author: <span ng-bind="post.author"></span></p>
 
-                    <h3>Date: <span ng-bind="post.date | date:'shortDate'"></span></h3>
+                    <p>Date: <span ng-bind="post.date | date:'shortDate'"></span></p>
 
-                    <p ng-bind="post.body"></p>
+                    <p class="body" ng-bind="post.body"></p>
 
-                    <h3>Comments: <a href="" ng-click="comments_show = !comments_show">{$ post.comments.length $}</a>
-                    </h3>
+                    <p>
+                        <strong>Tags:
+                            <a ng-repeat="tag in post.tags" href="" ng-click="get_posts_by_tag(tag)">{$ tag $} </a>
+                        </strong>
+                    </p>
+                    <strong>Comments: <a href="" ng-click="get_post(post.permalink)">{$ post.comments.length $}</a>
+                    </strong>
 
                     <ul ng-show="comments_show">
                         <li ng-repeat="comment in post.comments">
 
                             <h4 ng-bind="comment.author"></h4>
                             <h6>Email: <span ng-bind="comment.email"></span></h6>
+                            <p ng-bind="comment.body"></p>
 
-                            <p>Likes: <span ng-bind="comment.num_likes"></span></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div ng-switch-when="posts-list-by-tag" class="post-list">
+            <h1>My Blog</h1>
 
+            <div  class="post">
+                <div ng-repeat="post in posts_by_tag">
+                    <h2><a href="" ng-click="get_post(post.permalink)"><span ng-bind="post.title"></span></a></h2>
+
+                    <p>Author: <span ng-bind="post.author"></span></p>
+
+                    <p>Date: <span ng-bind="post.date | date:'shortDate'"></span></p>
+
+                    <p class="body" ng-bind="post.body"></p>
+                    <p>
+                        <strong>Tags:
+                            <a ng-repeat="tag in post.tags" href="" ng-click="get_posts_by_tag(tag)">{$ tag $} </a>
+                        </strong>
+                    </p>
+                    <strong>Comments: <a href="" ng-click="get_post(post.permalink)">{$ post.comments.length $}</a>
+                    </strong>
+
+                    <ul ng-show="comments_show">
+                        <li ng-repeat="comment in post.comments">
+
+                            <h4 ng-bind="comment.author"></h4>
+                            <h6>Email: <span ng-bind="comment.email"></span></h6>
                             <p ng-bind="comment.body"></p>
 
                         </li>
@@ -141,26 +175,23 @@
             </div>
         </div>
         <div ng-switch-when="single-post" class="single-post">
-           <h2>Одиночный пост</h2>
+
             <h2><span ng-bind="single_post.title"></span></h2>
 
-            <h3>Author: <span ng-bind="single_post.author"></span></h3>
+            <p>Author: <strong ng-bind="single_post.author"></strong></p>
 
-            <h3>Date: <span ng-bind="single_post.date | date:'shortDate'"></span></h3>
+            <p>Date: <strong ng-bind="single_post.date | date:'shortDate'"></strong></p>
 
             <p ng-bind="single_post.body"></p>
 
-            <h3>Comments: <a href="" ng-click="comments_show = !comments_show">{$ single_post.comments.length $}</a>
-            </h3>
+            <strong>Comments: <a href="" ng-click="comments_show = !comments_show">{$ single_post.comments.length $}</a>
+            </strong>
 
             <ul ng-show="comments_show">
                 <li ng-repeat="comment in single_post.comments">
 
                     <h4 ng-bind="comment.author"></h4>
                     <h6>Email: <span ng-bind="comment.email"></span></h6>
-
-                    <p>Likes: <span ng-bind="comment.num_likes"></span></p>
-
                     <p ng-bind="comment.body"></p>
 
                 </li>
@@ -169,7 +200,7 @@
             <h3>Add a comment</h3>
 
             <form class="comment_form" name="commentForm" ng-submit="commentForm.$valid && add_comment(single_post.permalink,comment)" novalidate> <!--/newcomment-->
-                <div>comment form is {$ commentForm.$valid $}</div>
+
                 <div class="from-group">
                     <input type="hidden" name="permalink" ng-model="single_post.permalink">
                     <label for = "name">Name  (required)</label>
@@ -191,19 +222,18 @@
     <div ng-switch-when="new-post">
         <div class="new_post">
             <form name = "newPostForm" ng-submit="newPostForm.$valid && add_new_post(post)" novalidate>
-                {{errors}}
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control" name="subject" size="120" ng-model="post.title" value="{{subject}}" required>
+                    <input type="text" class="form-control" name="subject" size="120" ng-model="post.title" value="" required>
                 </div>
                 <div class="form-group">
                     <label>Blog Entry</label>
-                    <textarea name="body" class="form-control" cols="120" ng-model = "post.body" rows="20" required>{{body}}</textarea>
+                    <textarea name="body" class="form-control" cols="120" ng-model = "post.body" rows="20" required></textarea>
                 </div>
                 <div class="form-group">
                     <label>Tags</label>
                     <span>Comma separated, please</span>
-                    <input type="text" class="form-control" name="tags" ng-model="post.tags" size="120" value="{{tags}}" required>
+                    <input type="text" class="form-control" name="tags" ng-model="post.tags" size="120" value="" required>
                 </div>
                 <input type="submit" class="btn btn-default" value="Submit">
             </form>

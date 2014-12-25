@@ -16,8 +16,8 @@ function PostsDAO(db) {
         console.log("inserting blog entry" + title + body);
 
         // fix up the permalink to not include whitespace
-        var permalink = title.replace( /\s/g, '_' );
-        permalink = permalink.replace( /\W/g, '' );
+        var permalink = new Date().valueOf().toString();
+       /* permalink = permalink.replace( /\W/g, '' );*/
 
         // Build a new post
         var post = {"title": title,
@@ -26,16 +26,17 @@ function PostsDAO(db) {
                 "permalink":permalink,
                 "tags": tags,
                 "comments": [],
-                "date": new Date()}
+                "date": new Date()};
 
         // now insert the post
         posts.insert(post, function (err, result) {
             "use strict";
+            console.dir();
 
             if (err) return callback(err, null);
 
-            console.log("Inserted new post",permalink);
-            callback(err, permalink);
+            console.log("Inserted new post");
+            callback(err, result[0]);
         });
     }
 
@@ -75,7 +76,7 @@ function PostsDAO(db) {
             if (err) return callback(err, null);
 
             // XXX: Look here for final exam to see where we store "num_likes"
-
+            console.log("comments", post.comments);
             // fix up likes values. set to zero if data is not present
             if (typeof post.comments === 'undefined') {
                 post.comments = [];
@@ -154,7 +155,6 @@ function PostsDAO(db) {
 
             callback(err, post);
         });
-        // TODO: Final exam question - Increment the number of likes
 
     }
 }

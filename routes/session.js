@@ -151,7 +151,7 @@ function SessionHandler (db) {
         }
         else {
             console.log("user did not validate");
-            return res.render("signup", errors);
+            return res.json(errors);
         }
     }
 
