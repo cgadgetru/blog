@@ -1,14 +1,14 @@
-Blog project for M101JS
+#Blog project
 
-./app.js - entry point
-./package.json - npm package description
-./routes/ - Application routes
-./posts.js - Posts Data Access Helper
-./sessions.js - Sessions Data Access Helper
-./users.js - Users Data Access Helper
-./views/ - html templates
+###./app.js - entry point
+###./package.json - npm package description
+###./routes/ - Application routes
+###./posts.js - Posts Data Access Helper
+###./sessions.js - Sessions Data Access Helper
+###./users.js - Users Data Access Helper
+###./views/ - html templates
 
-Getting started
+#Getting started
 
-npm install
-node app.js
+#####npm install
+#####node app.js
