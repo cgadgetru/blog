@@ -30,7 +30,7 @@ module.exports = exports = function(app, db) {
     app.post('/like', contentHandler.handleLike);
 
     // Login form
-    app.get('/login', sessionHandler.displayLoginPage);
+    //app.get('/login', sessionHandler.displayLoginPage);
     app.post('/login', sessionHandler.handleLoginRequest);
 
     // Logout page

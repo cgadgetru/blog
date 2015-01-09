@@ -1,0 +1,35 @@
+<div class="signup-form">
+    <h2>Signup</h2>
+    <p class="bg-danger" ng-bind="singup_error"></p>
+    <form name = "singupForm" method="post" novalidate ng-submit="singupForm.$valid && signup(user)">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" name="username" id="username" ng-model="user.username" value="{{username}}" required>
+            <div ng-show="singupForm.username.$dirty && singupForm.username.$invalid">Invalid:
+                <span ng-show="singupForm.username.$error.required">Tell us your name.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" ng-model="user.password" value="" required>
+            <div ng-show="singupForm.password.$dirty && singupForm.password.$invalid">Invalid:
+                <span ng-show="singupForm.password.$error.required">Tell us your password.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="verify">Verify Password</label>
+            <input type="password" class="form-control" id="verify" name="verify" ng-model="user.verify" value="" required>
+            <div ng-show="singupForm.verify.$dirty && singupForm.verify.$invalid">Invalid:
+                <span ng-show="singupForm.verify.$error.required">Tell us your verify.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Email (optional)</label>
+            <input type="text" class="form-control" name="email" value="{{email}}" ng-model="user.email" required>
+            <div ng-show="singupForm.email.$dirty && singupForm.email.$invalid">Invalid:
+                <span ng-show="singupForm.email.$error.required">Tell us your email.</span>
+            </div>
+        </div>
+        <input class="btn btn-default" type="submit">
+    </form>
+</div>

@@ -22,7 +22,7 @@ function SessionHandler (db) {
 
     this.displayLoginPage = function(req, res, next) {
         "use strict";
-        return res.render("login", {username:"", password:"", login_error:""})
+        return res.render("blog_template");
     }
 
     this.handleLoginRequest = function(req, res, next) {
@@ -55,7 +55,7 @@ function SessionHandler (db) {
                 if (err) return next(err);
 
                 res.cookie('session', session_id);
-                return res.json('{}');
+                return res.json({username:user['_id']});
             });
         });
     }

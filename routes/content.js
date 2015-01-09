@@ -26,13 +26,14 @@ function ContentHandler (db) {
 
     this.getPostsList = function(req, res, next) {
         "use strict";
+        var username = req.username;
 
         posts.getPosts(10, function(err, results) {
             "use strict";
 
             if (err) return next(err);
 
-            return res.json(results);
+            return res.json({posts:results,username:username});
 
 
         });
@@ -49,7 +50,7 @@ function ContentHandler (db) {
 
             return res.json(results);
         });
-    }
+    };
 
     this.displayPostByPermalink = function(req, res, next) {
         "use strict";
